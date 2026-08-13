@@ -11,9 +11,9 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y xfce4 xfce4-goodies tightvncserver
-        # Novo método oficial e seguro de instalação do Ngrok
-        curl -s https://amazonaws.com | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
-        echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
+        # Instalação direta do Ngrok via script oficial do fabricante
+        curl -s https://amazonaws.com | sudo tee /usr/share/keyrings/ngrok.asc >/dev/null
+        echo "deb [signed-by=/usr/share/keyrings/ngrok.asc] https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
         sudo apt-get update
         sudo apt-get install -y ngrok
     - name: Conectando a Chave
