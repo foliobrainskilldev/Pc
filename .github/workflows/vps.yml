@@ -1,0 +1,30 @@
+name: Ligar-Meu-PC
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Preparando o PC
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y xfce4 xfce4-goodies tightvncserver
+        curl -s https://amazonaws.com | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
+        echo "deb https://amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
+        sudo apt-get update && sudo apt-get install ngrok
+    - name: Conectando a Chave
+      run: |
+        ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
+        mkdir -p ~/.vnc
+        echo "123456" | vncpasswd -f > ~/.vnc/passwd
+        chmod 600 ~/.vnc/passwd
+        vncserver :1 -geometry 1280x720 -depth 24
+    - name: Mostrar Link do PC
+      run: |
+        ngrok tcp 5901 --log=stdout > ngrok.log &
+        sleep 5
+        curl -s http://127.0.0 | grep -o 'tcp://[^"]*'
+    - name: Manter PC Ligado
+      run: sleep 21600
