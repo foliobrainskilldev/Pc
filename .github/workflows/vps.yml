@@ -7,13 +7,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Preparando o PC
+    - name: Instalar Interface Grafica e Ngrok
       run: |
         sudo apt-get update
         sudo apt-get install -y xfce4 xfce4-goodies tightvncserver
+        # Novo método oficial e seguro de instalação do Ngrok
         curl -s https://amazonaws.com | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
-        echo "deb https://amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
-        sudo apt-get update && sudo apt-get install ngrok
+        echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
+        sudo apt-get update
+        sudo apt-get install -y ngrok
     - name: Conectando a Chave
       run: |
         ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
